@@ -4,12 +4,19 @@ provider "aws" {
 
 resource "aws_security_group" "swarm_sg" {
   name        = "swarm_sg"
-  description = "Allow all inbound traffic"
+  description = "Allow all inbound traffic and SSH"
 
   ingress {
     from_port   = 0
     to_port     = 0
     protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
 
@@ -22,7 +29,7 @@ resource "aws_security_group" "swarm_sg" {
 }
 
 resource "aws_instance" "swarm_master" {
-  count         = 3
+  count         = 1
   ami           = var.ami
   instance_type = var.instance_type
   key_name      = var.key_name
@@ -64,7 +71,7 @@ resource "aws_instance" "swarm_master" {
 }
 
 resource "aws_instance" "swarm_worker" {
-  count         = 3
+  count         = 2
   ami           = var.ami
   instance_type = var.instance_type
   key_name      = var.key_name
@@ -122,27 +129,8 @@ resource "null_resource" "swarm_init" {
   depends_on = [aws_instance.swarm_master]
 }
 
-resource "null_resource" "swarm_join_master" {
-  count = 2
-
-  provisioner "remote-exec" {
-    inline = [
-      "docker swarm join --token $(ssh -o StrictHostKeyChecking=no -i /home/ubuntu/stagingPEM.pem ubuntu@${aws_instance.swarm_master[0].public_ip} 'docker swarm join-token manager -q') ${aws_instance.swarm_master[0].public_ip}:2377"
-    ]
-
-    connection {
-      type        = "ssh"
-      user        = "ubuntu"
-      private_key = file(var.key_path)
-      host        = element(aws_instance.swarm_master.*.public_ip, count.index + 1)
-    }
-  }
-
-  depends_on = [null_resource.swarm_init]
-}
-
 resource "null_resource" "swarm_join_worker" {
-  count = 3
+  count = 2
 
   provisioner "remote-exec" {
     inline = [
