@@ -1,67 +1,65 @@
 
 
-Terraform Docker Swarm Cluster Deployment
+# Terraform Docker Swarm Cluster Deployment
 
 This repository contains Terraform scripts to automate the deployment of a Docker Swarm cluster on AWS EC2 instances. Docker Swarm allows you to manage a cluster of Docker engines, providing native clustering capabilities to turn a group of Docker engines into a single virtual Docker engine.
 
-Prerequisites
+## Prerequisites
 
 Before you begin, ensure you have the following:
 
-AWS account with appropriate permissions.
+- AWS account with appropriate permissions.
+- Terraform installed locally. See [Terraform Installation Guide](https://learn.hashicorp.com/tutorials/terraform/install-cli) for instructions.
+- AWS CLI installed and configured with an IAM user's access key and secret key.
 
-Terraform installed locally. See Terraform Installation Guide for instructions.
+## Steps to Deploy
 
-AWS CLI installed and configured with an IAM user's access key and secret key.
+1. **Clone the Repository:**
+   ```bash
+   git clone https://github.com/saikiranpi/Terraform-Docker-Swarm-Cluster.git
+   cd Terraform-Docker-Swarm-Cluster
+   ```
 
-Steps to Deploy
+2. **Update AWS Key Location and Name:**
+   Replace the default key location and name in Terraform configuration files (`variables.tf`, `main.tf`) with your own key details.
 
-Clone the Repository:
+3. **Validate Terraform Configuration:**
+   ```bash
+   terraform validate
+   ```
 
+4. **Plan Deployment:**
+   ```bash
+   terraform plan
+   ```
 
-bash
-Copy code
-git clone https://github.com/saikiranpi/Terraform-Docker-Swarm-Cluster.git
-cd Terraform-Docker-Swarm-Cluster
-Update AWS Key Location and Name:
-Replace the default key location and name in Terraform configuration files (variables.tf, main.tf) with your own key details.
+5. **Apply Deployment:**
+   ```bash
+   terraform apply
+   ```
+   Enter `yes` when prompted to confirm the deployment.
 
-Validate Terraform Configuration:
+6. **Accessing the Docker Swarm Cluster:**
+   After deployment, follow Terraform output or AWS Console to access the Docker Swarm cluster.
 
-bash
-Copy code
-terraform validate
-Plan Deployment:
+## Customization
 
-bash
-Copy code
-terraform plan
-Apply Deployment:
+- Adjust `variables.tf` and `main.tf` to customize cluster size, instance types, and other parameters.
 
-bash
-Copy code
-terraform apply
-Enter yes when prompted to confirm the deployment.
-
-Accessing the Docker Swarm Cluster:
-
-After deployment, follow Terraform output or AWS Console to access the Docker Swarm cluster.
-
-Customization
-
-Adjust variables.tf and main.tf to customize cluster size, instance types, and other parameters.
-Cleanup
+## Cleanup
 
 To destroy the Docker Swarm cluster and associated resources:
 
-
-bash
-Copy code
+```bash
 terraform destroy
-Enter yes when prompted to confirm destruction.
+```
 
-Contributing
+Enter `yes` when prompted to confirm destruction.
+
+## Contributing
+
 Contributions are welcome! Feel free to open issues or pull requests for any improvements or fixes.
 
-License
-This project is licensed under the MIT License - see the LICENSE file for details.
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
